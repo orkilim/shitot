@@ -16,10 +16,21 @@ class MassageBox : public Panel, public Listener {
         MassageBox(string message);
         ~MassageBox() {}
 
-
+        void setMessageValue(string messageValue) { this->messageValue.setValue(messageValue); }
+        string getMessageValue() { return messageValue.getValue(); }
+            
+        void setOKText(string ok) { this->ok = ok; }
+        void setCancelText(string cancel) { this->cancel = cancel; }
+            
+        void setValue(string message) { this->buttonMsgValue = message; }
+        string getValue(){ return this->buttonMsgValue; }
 
         void draw(Graphics& g, int x, int y, size_t z);
 
         void mousePressed(int x, int y, bool isLeft);
-        
+        void activateListener(int x, int y);
+        virtual void okPressed();
+        virtual void cancelPressed();
+        bool canGetFocus() { return TRUE; };
+        void onFocus(bool flag);
 };

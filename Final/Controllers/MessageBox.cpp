@@ -43,3 +43,34 @@ void MassageBox::mousePressed(int x, int y,bool isLeft){
         cancel.mousePressed(x, y, isLeft);
     }
 }
+
+void MassageBox::activateListener(int x, int y){
+    if (visible) {
+        if (isInside(x,y, getLeft() + ok.getLeft() + 1, getTop() + ok.getTop() + 1, ok.getWidth(), ok.getHeight())) {
+            okPressed();
+        }
+        if (isInside(x,y, getLeft() + cancel.getLeft() + 1, getTop() + cancel.getTop() + 1, cancel.getWidth(), cancel.getHeight())) {
+            cancelPressed();
+        }
+    }
+    else {
+        Control::lock_events();
+    }
+}
+
+void MassageBox::okPressed(){
+    this->SetVisability(false);
+    buttonMsgValue = "OK";
+    Control::enable_events();
+}
+
+void MassageBox::cancelPressed(){
+    this->SetVisability(false);
+    buttonMsgValue = "CANCEL";
+    Control::enable_events();
+}
+
+void MassageBox::onFocus(bool flag)
+{
+    focus = flag;
+}
