@@ -17,7 +17,7 @@ class Button : public Label {
         Button(Border* _border, short _left, short _top, string val);
         bool canGetFocus() { return FALSE; };
         void addListener(Listener* listner);
-        
+        void mousePressed(int x, int y, bool isLeft);
         void draw(Graphics& g, int x, int y, size_t z);
         ~Button() {};
 };
