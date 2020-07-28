@@ -62,3 +62,30 @@ void NumericBox::onFocus(bool flag)
     focus = flag;
 
 }
+
+//void NumericBox::keyDown(int keyCode, char charecter, Graphics& g)
+//{
+//    switch (keyCode)
+//    {
+//    case VK_DELETE:
+//        value = 0;
+//        break;
+//    case VK_LEFT:
+//        value++;
+//        break;
+//    case VK_NUMPAD4:
+//        value++;
+//    case VK_RIGHT:
+//        if (value == 0) {
+//            break;
+//        }
+//        value--;
+//        break;
+//    case VK_NUMPAD6:
+//        if (value == 0) {
+//            break;
+//        }
+//        value--;
+//        break;
+//    }
+//}
