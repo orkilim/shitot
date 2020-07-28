@@ -45,3 +45,36 @@ void RadioBox::mousePressed(int x, int y, bool isLeft)
             }
         }
 }
+
+void RadioBox::activateListener(int x, int y)
+{
+    ofstream myfile;
+    myfile.open ("activateListener.txt", std::ios_base::app);
+    for(int i=0; i < options_pos.size(); i++){
+        if(x >= options_pos[i].x && x <= options_pos[i].x + 10 && y >= options_pos[i].y)
+        {
+            if(selectedItem>=0)
+            ClearSelection();
+            SelectedItem(i);
+        }
+    }
+    myfile.close();
+}
+
+bool RadioBox::SelectedItem(int index) {
+    Color tempColor = options[index].getBackgroundColor();
+    options[index].SetBackgroundColor(options[index].getTextColor());
+    options[index].SetTextColor(tempColor);
+    this->updateFocusedControler(this);
+    selectedItem=index;
+    return true;
+}
+
+bool RadioBox::ClearSelection() {
+    Color tempColor = options[selectedItem].getBackgroundColor();
+    options[selectedItem].SetBackgroundColor(options[selectedItem].getTextColor());
+    options[selectedItem].SetTextColor(tempColor);
+    this->updateFocusedControler(this);
+    selectedItem = -1;
+    return true;
+}
