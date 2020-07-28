@@ -20,5 +20,8 @@ class RadioBox : public Panel, public Listener {
         void draw(Graphics& g, int x, int y, size_t z);
         void keyDown(int keyCode, char character);
         void mousePressed(int x, int y, bool isLeft);
-
+        void activateListener(int x, int y);
+        bool SelectedItem(int index);
+        bool ClearSelection();
+        bool canGetFocus() { return TRUE; };
 };
