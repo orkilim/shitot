@@ -148,3 +148,22 @@ void CheckList::onFocus(bool flag)
 {
 	focus = flag;
 }
+
+bool CheckList::AddSelectedItem(int index)
+{
+    if (index >= 0 && index <= options_pos.size())
+    {
+        selectedItems[index] = true;
+        return true;
+    }
+    return false;
+}
+bool CheckList::RemoveSelectedItem(int index)
+{
+    if (index >= 0 && index <= options_pos.size())
+    {
+        selectedItems[index] = false;
+        return true;
+    }
+    return TRUE;
+}

@@ -137,7 +137,7 @@ void RadioBox::activateListener(int x, int y)
 }
 bool RadioBox::SelectedItem(int index)
 {
-    if (index > 0 && index <= options_pos.size())
+    if (index >= 0 && index <= options_pos.size())
     { 
     selectedItem = index;
     return true;

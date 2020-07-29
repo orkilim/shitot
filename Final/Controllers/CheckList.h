@@ -28,4 +28,6 @@ class CheckList : public Panel, public Listener {
         bool canGetFocus() { return TRUE; };
         bool isListObj() { return TRUE; }
         void onFocus(bool flag);
+        bool AddSelectedItem(int index);
+        bool RemoveSelectedItem(int index);
 };
