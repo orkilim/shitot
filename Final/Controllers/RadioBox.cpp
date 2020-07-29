@@ -2,7 +2,7 @@
 #include <fstream>
 
 RadioBox::RadioBox(int left, int top, vector<string> options_lbl) : Panel(left, top, 20, 10, new Single, Color::White, Color::Red),
-left(left),top(top),options_lbl(options_lbl)
+left(left),top(top),options_lbl(options_lbl), focus(false)
 {
     position_t pos = {0,0};
     for (std::vector<string>::iterator lbl = options_lbl.begin() ; lbl != options_lbl.end(); ++lbl)
@@ -21,16 +21,17 @@ left(left),top(top),options_lbl(options_lbl)
 }
 
 void RadioBox::draw(Graphics& g, int x, int y, size_t z) {
-    int controlerX, controlerY;
 
-    if (isInside(x, y, getLeft(), getTop(), getWidth(), getHeight())&& cursor==-1)
+    if (this == focused && cursor == -1)
+        focus = true;
+    if (focus && cursor == -1)
         cursor++;
 
-    if(cursor>=0)
-    SelectItemCursor(cursor);
+    if (cursor >= 0)
+        SelectItemCursor(cursor);
 
     if (selectedItem >= 0)
-    g.write(x - 2, y + selectedItem, "X");
+        g.write(x - 2, y + selectedItem, "X");
 
     if (!z)
         Panel::draw(g, x - 1, y - 1, z);
@@ -38,6 +39,8 @@ void RadioBox::draw(Graphics& g, int x, int y, size_t z) {
 
 bool RadioBox::keyDown(int keyCode, char character)
 {
+
+
  SelectItemCursor(cursor);
     if (cursor >= 0)
     {
@@ -50,9 +53,10 @@ bool RadioBox::keyDown(int keyCode, char character)
 
         if (keyCode == VK_TAB || keyCode == VK_DOWN || keyCode == VK_NUMPAD2)
 
-            if (cursor == 3)
+            if (cursor == options_pos.size()-1)
             {
                 cursor = -1;
+                focus = false;
                 return true;
             }
             else
@@ -71,17 +75,52 @@ bool RadioBox::keyDown(int keyCode, char character)
 void RadioBox::mousePressed(int x, int y, bool isLeft)
 {
 
-    if (x >= options_pos[0].x && x <= options_pos[options_pos.size() - 1].x + 10 && y >= options_pos[0].y && y <= options_pos[options_pos.size()-1].y && isLeft == true)
+    if (x >= options_pos[0].x && x <= options_pos[options_pos.size() - 1].x + 20 && y >= options_pos[0].y && y <= options_pos[options_pos.size() - 1].y && isLeft == true)
     {
+
+        if (this != focused || focus == false)
+        {
+            focus = true;
+            focused = this;
+        }
+        else
             ClearItemCursor();
-            cursor = y - options_pos[0].y;
-            selectedItem = cursor;
+        cursor = y - options_pos[0].y;
+        selectedItem = cursor;
     }
     else {
-        SelectItemCursor(cursor);
+        if (x >= left && x <= left + width && y >= top && y <= top + width || focus == false)
+        {
+            if (cursor > -1)
+                SelectItemCursor(cursor);
+        }
+        else
+            if (focus == true)
+            {
+                focus = false;
+                SelectItemCursor(cursor);
+                cursor = -1;
+                focused = NULL;
+            }
     }
 }
 
+bool RadioBox::SelectItemCursor(int index) {
+    Color tempColor = options[index].getBackgroundColor();
+    options[index].SetBackgroundColor(options[index].getTextColor());
+    options[index].SetTextColor(tempColor);
+    this->updateFocusedControler(this);
+    cursor=index;
+    return true;
+}
+bool RadioBox::ClearItemCursor() {
+    Color tempColor = options[cursor].getBackgroundColor();
+    options[cursor].SetBackgroundColor(options[cursor].getTextColor());
+    options[cursor].SetTextColor(tempColor);
+    this->updateFocusedControler(this);
+    cursor = -1;
+    return true;
+}
 void RadioBox::activateListener(int x, int y)
 {
     ofstream myfile;
@@ -96,25 +135,6 @@ void RadioBox::activateListener(int x, int y)
     }
     myfile.close();
 }
-
-bool RadioBox::SelectItemCursor(int index) {
-    Color tempColor = options[index].getBackgroundColor();
-    options[index].SetBackgroundColor(options[index].getTextColor());
-    options[index].SetTextColor(tempColor);
-    this->updateFocusedControler(this);
-    cursor=index;
-    return true;
-}
-
-bool RadioBox::ClearItemCursor() {
-    Color tempColor = options[cursor].getBackgroundColor();
-    options[cursor].SetBackgroundColor(options[cursor].getTextColor());
-    options[cursor].SetTextColor(tempColor);
-    this->updateFocusedControler(this);
-    cursor = -1;
-    return true;
-}
-
 bool RadioBox::SelectedItem(int index)
 {
     if (index > 0 && index <= options_pos.size())

@@ -20,29 +20,3 @@ void Button::addListener(Listener* listener) {
     if(listener != nullptr)
         Listeners.push_back(listener);
 }
-
-//bool Button::keyDown(int keyCode, char character) {
-//
-//    if (keyCode == VK_DOWN)
-//    {
-//        if (curr == size - 1)
-//        {
-//            curr = 0;
-//        }
-//        else
-//        {
-//            ++curr;
-//        }
-//
-//        for (auto& value : Panel::controls)
-//        {
-//            value->setTextColor(textColor);
-//        }
-//        temp = dynamic_cast<CheckBox*>(Panel::controls[curr]);
-//        temp->setTextColor(Color::White);
-//    }
-//    this->flipBgToWhite();
-//    clicked = TRUE;
-//}
-//
-//

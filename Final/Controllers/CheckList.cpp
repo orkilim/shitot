@@ -2,7 +2,7 @@
 #include <fstream>
 
 CheckList::CheckList(int left, int top, vector<string> options_lbl) : Panel(left, top, 20, 10, new Single, Color::Black, Color::Green),
-left(left),top(top),options_lbl(options_lbl)
+left(left),top(top),options_lbl(options_lbl),focus(false)
 {
     position_s pos = {0,0};
     for (std::vector<string>::iterator lbl = options_lbl.begin() ; lbl != options_lbl.end(); ++lbl)
@@ -17,12 +17,25 @@ left(left),top(top),options_lbl(options_lbl)
         pos.x = getLeft();
         pos.y = getTop()+i+1;
         options_pos.push_back(pos);
-        cursor[i] = FALSE;
+        selectedItems[i] = FALSE;
     }
 }
 
 void CheckList::draw(Graphics& g, int x, int y, size_t z) {
-    int controlerX, controlerY;
+
+    if (this == focused && cursor == -1)
+        focus = true;
+    if (focus && cursor == -1)
+        cursor++;
+
+    if (cursor >= 0)
+        SelectItemCursor(cursor);
+    for (int i = 0; i < options_pos.size(); i++)
+    {
+    if (selectedItems[i])
+        g.write(x - 2, y + i, "X");
+    }
+    
     if (!z)
         Panel::draw(g, x-1, y-1, z);
 }
@@ -30,17 +43,35 @@ void CheckList::draw(Graphics& g, int x, int y, size_t z) {
 
 void CheckList::mousePressed(int x, int y, bool isLeft)
 {
-    int u, t;
-    for (int i = 0; i < options_pos.size(); i++) {
-        if (x >= options_pos[i].x && x <= options_pos[i].x + 10 && y == options_pos[i].y && isLeft == true)
+    if (x >= options_pos[0].x && x <= options_pos[options_pos.size() - 1].x + 20 && y >= options_pos[0].y && y <= options_pos[options_pos.size() - 1].y && isLeft == true)
+    {
+        if (this != focused || focus == false)
         {
-            if (cursor[i] == FALSE)
-            {
-                AddSelectedItem(i);
-            }
-            else
-                RemoveSelectedItem(i);
+            focus = true;
+            focused = this;
         }
+        else
+            ClearItemCursor();
+        cursor = y - options_pos[0].y;
+        if (selectedItems[cursor] != TRUE)
+            selectedItems[cursor] = TRUE;
+        else
+            selectedItems[cursor] = FALSE;
+    }
+    else {
+        if (x >= left && x <= left + width && y >= top && y <= top + width || focus == false)
+        {
+            if (cursor > -1)
+                SelectItemCursor(cursor);
+        }
+        else
+            if (focus == true)
+            {
+                focus = false;
+                SelectItemCursor(cursor);
+                cursor = -1;
+                focused = NULL;
+            }
     }
 
 }
@@ -52,229 +83,67 @@ void CheckList::activateListener(int x, int y)
     for(int i=0; i < options_pos.size(); i++){
         if(x >= options_pos[i].x && x <= options_pos[i].x + 10 && y >= options_pos[i].y)
         {
-            AddSelectedItem(i);
+            SelectItemCursor(i);
         }
     }
     myfile.close();
 }
 
-bool CheckList::AddSelectedItem(int index) {
-    if (cursor[index] == FALSE)
-    {
-        Color tempColor = options[index].getBackgroundColor();
-        options[index].SetBackgroundColor(options[index].getTextColor());
-        options[index].SetTextColor(tempColor);
-        this->updateFocusedControler(this);
-        cursor[index] = TRUE;
-        return TRUE;
-    }
-    return FALSE;
+bool CheckList::SelectItemCursor(int index) {
+    Color tempColor = options[index].getBackgroundColor();
+    options[index].SetBackgroundColor(options[index].getTextColor());
+    options[index].SetTextColor(tempColor);
+    this->updateFocusedControler(this);
+    cursor = index;
+    return true;
 }
 
-bool CheckList::RemoveSelectedItem(int index) {
-    if (cursor[index] == TRUE)
-    {
-        Color tempColor = options[index].getBackgroundColor();
-        options[index].SetBackgroundColor(options[index].getTextColor());
-        options[index].SetTextColor(tempColor);
-        this->updateFocusedControler(this);
-        cursor[index] == FALSE;
-        return TRUE;
-    }
-    return FALSE;
+bool CheckList::ClearItemCursor() {
+    Color tempColor = options[cursor].getBackgroundColor();
+    options[cursor].SetBackgroundColor(options[cursor].getTextColor());
+    options[cursor].SetTextColor(tempColor);
+    this->updateFocusedControler(this);
+    cursor = -1;
+    return true;
 }
 
-//void CheckList::keyDown(int keyCode, char charecter, Graphics& g)
-//{
-//	int vectorSize = static_cast<int>(options_pos.size());
-//
-//	switch (keyCode)
-//	{
-//		//tab was pressed
-//	case VK_TAB:
-//		// if no focused
-//		if (++currentCboxIndex == 0)
-//		{
-//			selectedItemkey[] = currentCboxIndex;
-//			checkBoxs[currentCboxIndex]->flipBgToWhite();
-//		}
-//		// if is in last position befor out of the check list
-//		else if (currentCboxIndex == vectorSize - 1)
-//		{
-//			options_pos[currentCboxIndex - 1]->flipBgToBlack();
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		// middle
-//		else
-//		{
-//			options_pos[currentCboxIndex - 1]->flipBgToBlack();
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		break;
-//
-//		//key down was pressed
-//	case VK_DOWN:
-//		// if no focused
-//		if (++currentCboxIndex == 1)
-//		{
-//			options_pos[currentCboxIndex - 1]->flipBgToBlack();
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		else if (currentCboxIndex == 0)
-//		{
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		// if is in last position befor out of the check list
-//		else if (currentCboxIndex == vectorSize)
-//		{
-//			//options_pos[currentCboxIndex - 1]->flipBgToBlack();
-//			//options_pos[0]->flipBgToWhite();
-//			currentCboxIndex = 0;
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		// middle
-//		else
-//		{
-//			options_pos[currentCboxIndex - 1]->flipBgToBlack();
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		break;
-//
-//		//numpad2 was pressed like key down
-//	case VK_NUMPAD2:
-//		// if no focused
-//		if (++currentCboxIndex == 1)
-//		{
-//			options_pos[currentCboxIndex - 1]->flipBgToBlack();
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		else if (currentCboxIndex == 0)
-//		{
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		// if is in last position befor out of the check list
-//		else if (currentCboxIndex == vectorSize)
-//		{
-//			options_pos[currentCboxIndex - 1]->flipBgToBlack();
-//			options_pos[0]->flipBgToWhite();
-//			currentCboxIndex = 0;
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		// middle
-//		else
-//		{
-//			options_pos[currentCboxIndex - 1]->flipBgToBlack();
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		break;
-//
-//		//key up was pressed
-//	case VK_UP:
-//		// if no focused
-//		if (--currentCboxIndex == 0)
-//		{
-//			options_pos[currentCboxIndex + 1]->flipBgToBlack();
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		else if (currentCboxIndex <= -1)
-//		{
-//			currentCboxIndex = vectorSize - 1;
-//			options_pos[0]->flipBgToBlack();
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		// if is in last position befor out of the check list
-//		// middle
-//		else
-//		{
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			options_pos[currentCboxIndex + 1]->flipBgToBlack();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		break;
-//
-//		//numpad 8 was pressed like key up
-//	case VK_NUMPAD8:
-//		// if no focused
-//		if (--currentCboxIndex == 0)
-//		{
-//			options_pos[currentCboxIndex + 1]->flipBgToBlack();
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		else if (currentCboxIndex <= -1)
-//		{
-//			currentCboxIndex = vectorSize - 1;
-//			options_pos[0]->flipBgToBlack();
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		// if is in last position befor out of the check list
-//		// middle
-//		else
-//		{
-//			options_pos[currentCboxIndex]->flipBgToWhite();
-//			options_pos[currentCboxIndex + 1]->flipBgToBlack();
-//			selectedItemkey = currentCboxIndex;
-//		}
-//		break;
-//
-//		//space button was pressed to select current item and check it
-//	case VK_SPACE:
-//
-//		options_pos[selectedItemkey]->setIsSelected();
-//		break;
-//
-//	}
-//}
 
-//return true if the checklist focus is on last child
-bool CheckList::getIsInLastChild()
+bool CheckList::keyDown(int keyCode, char character)
 {
-	int vectorSize = static_cast<int>(options_pos.size());
-	// if no focused
-	if (++currentCboxIndex == 0)
-	{
-		selectedItemkey = currentCboxIndex;
-		//options_pos[currentCboxIndex]->flipBgToWhite();
-		return FALSE;
-	}
-	// if is in last position befor out of the check list
-	else if (currentCboxIndex == vectorSize - 1)
-	{
-		//options_pos[currentCboxIndex]->flipBgToWhite();
-		//options_pos[currentCboxIndex - 1]->flipBgToBlack();
-		currentCboxIndex = vectorSize - 1;
-		selectedItemkey = currentCboxIndex;
-		return FALSE;
-	}
-	else if (currentCboxIndex == vectorSize)
-	{
-		//options_pos[vectorSize - 1]->flipBgToBlack();
-		currentCboxIndex = -1;
-		return TRUE;
-	}
-	// middle
-	else
-	{
-		//options_pos[currentCboxIndex - 1]->flipBgToBlack();
-		//options_pos[currentCboxIndex]->flipBgToWhite();
-		selectedItemkey = currentCboxIndex;
-		return FALSE;
-	}
+    SelectItemCursor(cursor);
+    if (cursor >= 0)
+    {
+        if (keyCode == VK_UP || keyCode == VK_NUMPAD8)
+            if (cursor == 0)
+                cursor = 3;
 
+            else
+                cursor--;
+
+        if (keyCode == VK_TAB || keyCode == VK_DOWN || keyCode == VK_NUMPAD2)
+
+            if (cursor == options_pos.size() - 1)
+            {
+                cursor = -1;
+                focus = false;
+                return true;
+            }
+            else
+                cursor++;
+
+        if (keyCode == VK_SPACE || keyCode == VK_RETURN)
+        { 
+            if(selectedItems[cursor] != TRUE)
+            selectedItems[cursor] = TRUE;
+            else
+                selectedItems[cursor] = FALSE;
+        }
+
+        return false;
+    }
+    return true;
 }
 
-//set focus method
 void CheckList::onFocus(bool flag)
 {
 	focus = flag;
