@@ -13,15 +13,16 @@ class RadioBox : public Panel, public Listener {
         vector<Button> options;
         vector<string> options_lbl;
         vector<position_t> options_pos;
+        int cursor = -1;
         int selectedItem = -1;
 
     public:
         RadioBox(int left, int top, vector<string> options_lbl);
         void draw(Graphics& g, int x, int y, size_t z);
-        void keyDown(int keyCode, char character);
+        bool keyDown(int keyCode, char character);
         void mousePressed(int x, int y, bool isLeft);
         void activateListener(int x, int y);
-        bool SelectedItem(int index);
-        bool ClearSelection();
+        bool SelectItemCursor(int index);
+        bool ClearItemCursor();
         bool canGetFocus() { return TRUE; };
 };

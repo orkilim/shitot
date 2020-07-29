@@ -22,28 +22,54 @@ left(left),top(top),options_lbl(options_lbl)
 
 void RadioBox::draw(Graphics& g, int x, int y, size_t z) {
     int controlerX, controlerY;
+
+    if (isInside(x, y, getLeft(), getTop(), getWidth(), getHeight())&& cursor==-1)
+        cursor++;
+
+    if(cursor>=0)
+    SelectItemCursor(cursor);
+
     if (!z)
-        Panel::draw(g, x-1, y-1, z);
+        Panel::draw(g, x - 1, y - 1, z);
 }
 
-void RadioBox::keyDown(int keyCode, char character)
+bool RadioBox::keyDown(int keyCode, char character)
 {
-    ofstream myfile;
-    myfile.open ("keyDown.txt", std::ios_base::app);
-    myfile << "test" << endl;
-    myfile.close();
+    if (cursor >= 0)
+    {
+        SelectItemCursor(cursor);
+        if (keyCode == VK_UP)
+            if (cursor == 0)
+                cursor = 3;
+
+            else
+                cursor--;
+
+        if (keyCode == VK_TAB || keyCode == VK_DOWN)
+
+            if (cursor == 3)
+            {
+                cursor = -1;
+                return true;
+            }
+            else
+                cursor++;
+        return false;
+    }
+    return true;
 }
 
 void RadioBox::mousePressed(int x, int y, bool isLeft)
 {
-        for(int i=0; i < options_pos.size(); i++){
-            if(x >= options_pos[i].x && x <= options_pos[i].x + 10 && y >= options_pos[i].y && isLeft == true)
-            {
-                if (selectedItem >= 0)
-                ClearSelection();
-                SelectedItem(i);
-            }
-        }
+
+    if (x >= options_pos[0].x && x <= options_pos[options_pos.size() - 1].x + 10 && y >= options_pos[0].y && y <= options_pos[options_pos.size()-1].y && isLeft == true)
+    {
+            ClearItemCursor();
+            cursor = y - options_pos[0].y;
+    }
+    else {
+        SelectItemCursor(cursor);
+    }
 }
 
 void RadioBox::activateListener(int x, int y)
@@ -53,28 +79,28 @@ void RadioBox::activateListener(int x, int y)
     for(int i=0; i < options_pos.size(); i++){
         if(x >= options_pos[i].x && x <= options_pos[i].x + 10 && y >= options_pos[i].y)
         {
-            if(selectedItem>=0)
-            ClearSelection();
-            SelectedItem(i);
+            if(cursor>=0)
+            ClearItemCursor();
+            SelectItemCursor(i);
         }
     }
     myfile.close();
 }
 
-bool RadioBox::SelectedItem(int index) {
+bool RadioBox::SelectItemCursor(int index) {
     Color tempColor = options[index].getBackgroundColor();
     options[index].SetBackgroundColor(options[index].getTextColor());
     options[index].SetTextColor(tempColor);
     this->updateFocusedControler(this);
-    selectedItem=index;
+    cursor=index;
     return true;
 }
 
-bool RadioBox::ClearSelection() {
-    Color tempColor = options[selectedItem].getBackgroundColor();
-    options[selectedItem].SetBackgroundColor(options[selectedItem].getTextColor());
-    options[selectedItem].SetTextColor(tempColor);
+bool RadioBox::ClearItemCursor() {
+    Color tempColor = options[cursor].getBackgroundColor();
+    options[cursor].SetBackgroundColor(options[cursor].getTextColor());
+    options[cursor].SetTextColor(tempColor);
     this->updateFocusedControler(this);
-    selectedItem = -1;
+    cursor = -1;
     return true;
 }
