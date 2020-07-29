@@ -13,12 +13,12 @@ class Panel : public Control {
         
         void addToPanel(Control* controler);
         void draw(Graphics& g, int x, int y, size_t z);
-        virtual void keyDown(int keyCode, char character);
+        virtual bool keyDown(int keyCode, char character);
         virtual void mousePressed(int x, int y, bool isLeft);
         int findFocusIndex();
         void updateFocusedControler(Control* controler);
         Control* getFirstControl();
         int getFocusedControlCell(){ return focusedControlCell; }
-        bool canGetFocus() { return TRUE; };
+        bool canGetFocus() { return FALSE; };
         void getAllControls(vector<Control*>* controls);
 };

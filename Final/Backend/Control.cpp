@@ -19,7 +19,7 @@ Control::Control(short left, short top, short width, short height, Border* borde
 
 Control::~Control() {
     if(!border)
-        delete border;//99
+        delete border;
 }
 
 void Control::setBorder(Border* newBorder) {
@@ -38,4 +38,16 @@ void Control::draw(Graphics& g, int x, int y, size_t z) {
     g.setForeground(getTextColor());
     g.setBackground(getBackgroundColor());
     border->drawBorder(g, left, top, width, height);
+}
+
+void Control::flipBgToWhite()
+{
+    backgroundColor = Color::White;
+    textColor = Color::Black;
+}
+
+void Control::flipBgToBlack()
+{
+    backgroundColor = Color::Black;
+    textColor = Color::White;
 }

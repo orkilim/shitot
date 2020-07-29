@@ -19,5 +19,6 @@ class Button : public Label {
         void addListener(Listener* listner);
         void mousePressed(int x, int y, bool isLeft);
         void draw(Graphics& g, int x, int y, size_t z);
+       // void keyDown(int keyCode, char character);
         ~Button() {};
 };

@@ -51,15 +51,17 @@ class Control {
 		virtual void SetVisability(bool visibility) { this->visible = visibility; }
 
 		virtual void draw(Graphics& g, int x, int y, size_t z);
-		virtual void mousePressed(int x, int y, bool isLeft) {}
-		virtual void keyDown(int keyCode, char charecter) {}
-		virtual void getAllControls(vector<Control*>* controls) {}
-		virtual bool canGetFocus() { return false; }
+		virtual void mousePressed(int x, int y, bool isLeft) {};
+		virtual bool keyDown(int keyCode, char charecter) { return true; };
+		virtual void getAllControls(vector<Control*>* controls) {};
+		virtual bool canGetFocus() { return FALSE; };
 
-		virtual int findFocusIndex() { return -1; }
+		virtual int findFocusIndex() { return -1; };
 
-		static void lock_events(){ lockEvent = true; }
-		static void enable_events(){ lockEvent = false; }
+		static void lock_events() { lockEvent = true; };
+		static void enable_events() { lockEvent = false; };
 
+		virtual void flipBgToWhite();
+		virtual void flipBgToBlack();
 		~Control();
 };

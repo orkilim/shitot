@@ -1,6 +1,6 @@
 #include "CheckList.h"
 #include <fstream>
-/*newwwwwwwwwwwwwwwwwwwwwwwwwwwwww*/
+
 CheckList::CheckList(int left, int top, vector<string> options_lbl) : Panel(left, top, 20, 10, new Single, Color::Black, Color::Green),
 left(left),top(top),options_lbl(options_lbl)
 {
@@ -17,7 +17,7 @@ left(left),top(top),options_lbl(options_lbl)
         pos.x = getLeft();
         pos.y = getTop()+i+1;
         options_pos.push_back(pos);
-        selectedItem[i] = FALSE;
+        cursor[i] = FALSE;
     }
 }
 
@@ -34,7 +34,7 @@ void CheckList::mousePressed(int x, int y, bool isLeft)
     for (int i = 0; i < options_pos.size(); i++) {
         if (x >= options_pos[i].x && x <= options_pos[i].x + 10 && y == options_pos[i].y && isLeft == true)
         {
-            if (selectedItem[i] == FALSE)
+            if (cursor[i] == FALSE)
             {
                 AddSelectedItem(i);
             }
@@ -59,26 +59,26 @@ void CheckList::activateListener(int x, int y)
 }
 
 bool CheckList::AddSelectedItem(int index) {
-    if (selectedItem[index] == FALSE)
+    if (cursor[index] == FALSE)
     {
         Color tempColor = options[index].getBackgroundColor();
         options[index].SetBackgroundColor(options[index].getTextColor());
         options[index].SetTextColor(tempColor);
         this->updateFocusedControler(this);
-        selectedItem[index] = TRUE;
+        cursor[index] = TRUE;
         return TRUE;
     }
     return FALSE;
 }
 
 bool CheckList::RemoveSelectedItem(int index) {
-    if (selectedItem[index] == TRUE)
+    if (cursor[index] == TRUE)
     {
         Color tempColor = options[index].getBackgroundColor();
         options[index].SetBackgroundColor(options[index].getTextColor());
         options[index].SetTextColor(tempColor);
         this->updateFocusedControler(this);
-        selectedItem[index] == FALSE;
+        cursor[index] == FALSE;
         return TRUE;
     }
     return FALSE;

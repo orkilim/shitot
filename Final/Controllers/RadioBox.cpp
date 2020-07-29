@@ -29,23 +29,26 @@ void RadioBox::draw(Graphics& g, int x, int y, size_t z) {
     if(cursor>=0)
     SelectItemCursor(cursor);
 
+    if (selectedItem >= 0)
+    g.write(x - 2, y + selectedItem, "X");
+
     if (!z)
         Panel::draw(g, x - 1, y - 1, z);
 }
 
 bool RadioBox::keyDown(int keyCode, char character)
 {
+ SelectItemCursor(cursor);
     if (cursor >= 0)
     {
-        SelectItemCursor(cursor);
-        if (keyCode == VK_UP)
+        if (keyCode == VK_UP || keyCode == VK_NUMPAD8)
             if (cursor == 0)
                 cursor = 3;
 
             else
                 cursor--;
 
-        if (keyCode == VK_TAB || keyCode == VK_DOWN)
+        if (keyCode == VK_TAB || keyCode == VK_DOWN || keyCode == VK_NUMPAD2)
 
             if (cursor == 3)
             {
@@ -54,6 +57,12 @@ bool RadioBox::keyDown(int keyCode, char character)
             }
             else
                 cursor++;
+
+        if (keyCode == VK_SPACE || keyCode == VK_RETURN)
+        {
+            selectedItem = cursor;
+        }
+
         return false;
     }
     return true;
@@ -66,6 +75,7 @@ void RadioBox::mousePressed(int x, int y, bool isLeft)
     {
             ClearItemCursor();
             cursor = y - options_pos[0].y;
+            selectedItem = cursor;
     }
     else {
         SelectItemCursor(cursor);
@@ -102,5 +112,19 @@ bool RadioBox::ClearItemCursor() {
     options[cursor].SetTextColor(tempColor);
     this->updateFocusedControler(this);
     cursor = -1;
+    return true;
+}
+
+bool RadioBox::SelectedItem(int index)
+{
+    if (index > 0 && index <= options_pos.size())
+    { 
+    selectedItem = index;
+    return true;
+}
+    return false;
+}
+bool RadioBox::ClearSelection(){
+    selectedItem = -1;
     return true;
 }

@@ -15,6 +15,9 @@ class RadioBox : public Panel, public Listener {
         vector<position_t> options_pos;
         int cursor = -1;
         int selectedItem = -1;
+        bool SelectItemCursor(int index);
+        bool ClearItemCursor();
+
 
     public:
         RadioBox(int left, int top, vector<string> options_lbl);
@@ -22,7 +25,9 @@ class RadioBox : public Panel, public Listener {
         bool keyDown(int keyCode, char character);
         void mousePressed(int x, int y, bool isLeft);
         void activateListener(int x, int y);
-        bool SelectItemCursor(int index);
-        bool ClearItemCursor();
+        
         bool canGetFocus() { return TRUE; };
+        bool SelectedItem(int index);
+        bool ClearSelection();
+
 };

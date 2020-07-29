@@ -67,9 +67,10 @@ void Panel::mousePressed(int x, int y, bool isLeft) {
     }
 }
 
-void Panel::keyDown(int keyCode, char character) {
+bool Panel::keyDown(int keyCode, char character) {
     if (findFocusIndex() != -1)
         Controlers[focusedControlCell]->keyDown(keyCode, character);
+    return true;
 }
 
 void Panel::getAllControls(vector<Control*>* controls) {

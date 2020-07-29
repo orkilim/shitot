@@ -40,10 +40,11 @@ void EventEngine::run(Control &c)
 				{
 					auto code = record.Event.KeyEvent.wVirtualKeyCode;
 					auto chr = record.Event.KeyEvent.uChar.AsciiChar;
-					if (code == VK_TAB)
+
+					//if (code == VK_TAB || code == VK_DOWN || code == VK_UP || code == VK_SPACE || code == VK_RETURN)
+					if (f->keyDown(code, chr))
 						moveFocus(c, f);
-					else
-						f->keyDown(code, chr);
+						
 					redraw = true;
 				}
 				break;

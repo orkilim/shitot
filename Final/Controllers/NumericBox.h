@@ -34,5 +34,5 @@ class NumericBox : public Panel, public Listener {
         void onFocus(bool flag);
         bool canGetFocus() { return TRUE; };
 
-        void keyDown(int keyCode, char charecter, Graphics& g);
+        bool keyDown(int keyCode, char charecter, Graphics& g);
 };

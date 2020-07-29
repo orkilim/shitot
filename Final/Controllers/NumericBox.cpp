@@ -63,7 +63,7 @@ void NumericBox::onFocus(bool flag)
 
 }
 
-//void NumericBox::keyDown(int keyCode, char charecter, Graphics& g)
+//bool NumericBox::keyDown(int keyCode, char charecter, Graphics& g)
 //{
 //    switch (keyCode)
 //    {

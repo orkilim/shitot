@@ -14,5 +14,5 @@ public:
     string getValue();
     void setValue(string);
     void draw(Graphics &g, int x, int y, size_t z);
-    virtual bool canGetFocus() { return true; }
+    virtual bool canGetFocus() { return FALSE; }
 };

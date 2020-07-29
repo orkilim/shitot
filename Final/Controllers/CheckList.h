@@ -16,7 +16,7 @@ class CheckList : public Panel, public Listener {
         int currentCboxIndex;
         int selectedItemkey=0;
         bool focus;
-        bool selectedItem[];
+        bool cursor[];
        
     public:
         CheckList(int left, int top, vector<string> options_lbl);
@@ -26,7 +26,7 @@ class CheckList : public Panel, public Listener {
         bool AddSelectedItem(int index);
         bool RemoveSelectedItem(int index);
         bool getIsInLastChild();
-        void keyDown(int keyCode, char charecter, Graphics& g);
+        bool keyDown(int keyCode, char charecter, Graphics& g);
         bool canGetFocus() { return TRUE; };
         bool isListObj() { return TRUE; }
         void onFocus(bool flag);
