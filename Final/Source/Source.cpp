@@ -17,11 +17,11 @@ using namespace std;
 int main(int argc, char **argv)
 {
 
-Panel MainPanel(0, 0, 100, 100, new Double, Color::White, Color::Blue);
-Panel SecPanel(6, 16, 20, 9, new Single, Color::Black, Color::Cyan);
+	Panel MainPanel(0, 0, 100, 100, new Double, Color::White, Color::Blue);
+	Panel SecPanel(6, 16, 20, 9, new Single, Color::Black, Color::Cyan);
 
-Label Title("Welcome to our SE Methods project");
-	Title.setLeft(35); 
+	Label Title("Welcome to our SE Methods project");
+	Title.setLeft(35);
 
 	Label lcheckList("Check List:");
 	lcheckList.setLeft(11);
@@ -43,10 +43,11 @@ Label Title("Welcome to our SE Methods project");
 	lcomboBox.setLeft(45);
 	lcomboBox.setTop(2);
 	vector<string> combo_list_options;
-	combo_list_options.push_back(" 1)     Option     ");
-	combo_list_options.push_back(" 2)     Option     ");
-	combo_list_options.push_back(" 3)     Option     ");
-	combo_list_options.push_back(" 4)     Option     ");
+	combo_list_options.push_back(" (1)     Option     ");
+	combo_list_options.push_back(" (2)     Option     ");
+	combo_list_options.push_back(" (3)-----Option-----");
+	combo_list_options.push_back(" (4)     Option     ");
+	combo_list_options.push_back(" (5)     Option     ");
 	ComboBox comboBox(38, 3, combo_list_options);
 
 	Label lradioList("RadioBox:");
@@ -65,7 +66,6 @@ Label Title("Welcome to our SE Methods project");
 	lpanel.setLeft(1);
 	lpanel.setTop(2);
 
-
 	MassageBox msg("Click To Close Me!");
 	msg.SetVisability(true);
 	msg.setLeft(34);
@@ -79,7 +79,7 @@ Label Title("Welcome to our SE Methods project");
 	Label ltextBox("TextBox:");
 	ltextBox.setLeft(47);
 	ltextBox.setTop(24);
-	TextBox Text(30,27,36,"MKJHGBHIKHKGG");
+	TextBox Text(30, 27, 36, "SE Methods :-)..");
 
 	MainPanel.addToPanel(&Title);
 	MainPanel.addToPanel(&lcheckList);
@@ -88,15 +88,14 @@ Label Title("Welcome to our SE Methods project");
 	MainPanel.addToPanel(&comboBox);
 	MainPanel.addToPanel(&lradioList);
 	MainPanel.addToPanel(&rdList);
-	 SecPanel.addToPanel(&lpanel);
+	SecPanel.addToPanel(&lpanel);
 	MainPanel.addToPanel(&SecPanel);
 	MainPanel.addToPanel(&msg);
 	MainPanel.addToPanel(&lNumeric);
 	MainPanel.addToPanel(&numeric);
 	MainPanel.addToPanel(&ltextBox);
 	MainPanel.addToPanel(&Text);
-	
+
 	EventEngine e;
 	e.run(MainPanel);
-
 }
