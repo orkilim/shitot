@@ -21,26 +21,13 @@ class ComboBox : public Panel, public Listener
 	bool focus;
 	string valueToDisplay;
 
-
-	void onDownKey();
-	void onUpKey();
-	void onEnterKey();
-	bool SelectItemCursor(int index);
-	bool ClearItemCursor();
-
 public:
 	ComboBox(int left, int top, vector<string> options_lbl);
-	size_t getSelectedIndex();
-	void setSelectedIndex(size_t);
 	void draw(Graphics& g, int x, int y, size_t z);
 	void mousePressed(short x, short y, bool isLeft);
-	void toggle();
-	void unfocus();
-	void openList();
-	void closeList();
 	void activateListener(int x, int y);
 	bool keyDown(int keyCode, char character);
-
+	bool canGetFocus() { return TRUE; };
 
 
 	~ComboBox();

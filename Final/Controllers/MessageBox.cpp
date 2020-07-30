@@ -46,6 +46,12 @@ void MassageBox::mousePressed(int x, int y,bool isLeft){
     else if (isInside(x,y, getLeft() + cancel.getLeft() + 1, getTop() + cancel.getTop() + 1, cancel.getWidth(), cancel.getHeight())){
         cancel.mousePressed(x, y, isLeft);
     }
+    else if (!isInside(x, y, left,top , width, height)) {
+        this->ok.flipBgToBlack();
+        this->cancel.flipBgToBlack();
+        focus = false;
+        focused = NULL;
+    }
 }
 
 void MassageBox::activateListener(int x, int y){
