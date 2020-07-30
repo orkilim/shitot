@@ -40,7 +40,6 @@ void CheckList::draw(Graphics& g, int x, int y, size_t z) {
         Panel::draw(g, x-1, y-1, z);
 }
 
-
 void CheckList::mousePressed(int x, int y, bool isLeft)
 {
     if (x >= options_pos[0].x && x <= options_pos[options_pos.size() - 1].x + 20 && y >= options_pos[0].y && y <= options_pos[options_pos.size() - 1].y && isLeft == true)
@@ -115,7 +114,7 @@ bool CheckList::keyDown(int keyCode, char character)
     {
         if (keyCode == VK_UP || keyCode == VK_NUMPAD8)
             if (cursor == 0)
-                cursor = 3;
+                cursor = cursor == options_pos.size() - 1;
 
             else
                 cursor--;

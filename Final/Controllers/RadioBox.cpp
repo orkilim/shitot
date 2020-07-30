@@ -39,14 +39,12 @@ void RadioBox::draw(Graphics& g, int x, int y, size_t z) {
 
 bool RadioBox::keyDown(int keyCode, char character)
 {
-
-
  SelectItemCursor(cursor);
     if (cursor >= 0)
     {
         if (keyCode == VK_UP || keyCode == VK_NUMPAD8)
             if (cursor == 0)
-                cursor = 3;
+                cursor = cursor == options_pos.size() - 1;
 
             else
                 cursor--;

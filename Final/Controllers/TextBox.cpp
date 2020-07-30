@@ -7,13 +7,11 @@ TextBox::TextBox(short width, short top, short left, std::string value) :
     color(FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY),
     background(0), Label(value) {}
 
-void TextBox::handleKeyboardEvent(int keyCode, char charecter, Graphics& g)
+bool TextBox::keyDown(int keyCode, char charecter)
 {
+
 	int stringSize = static_cast<int>(value.size());
 
-	g.moveTo(static_cast<int>(value.size()) + (left + 1), top + 1);
-	if (charecter > 0)
-	{
 		if ((width - 2) > stringSize && (charecter >= 65 && charecter <= 90 || charecter >= 97 && charecter <= 122 || charecter >= 48 && charecter <= 57 || charecter == 32))
 		{
 			if (cursor < stringSize)
@@ -33,9 +31,8 @@ void TextBox::handleKeyboardEvent(int keyCode, char charecter, Graphics& g)
 				value.push_back(charecter);
 				cursor = static_cast<int>(value.size());
 			}
-
+			return false;
 		}
-	}
 	else
 	{
 		switch (keyCode)
@@ -45,6 +42,7 @@ void TextBox::handleKeyboardEvent(int keyCode, char charecter, Graphics& g)
 			{
 				value.erase(value.begin() + (cursor - 1));
 				--cursor;
+				return false;
 			}
 			break;
 		case VK_BACK:
@@ -52,75 +50,46 @@ void TextBox::handleKeyboardEvent(int keyCode, char charecter, Graphics& g)
 			{
 				value.erase(value.begin() + (cursor - 1));
 				--cursor;
+				return false;
+
 			}
+			break;
 		case VK_LEFT:
 			if (cursor > 0)
 			{
 				--cursor;
+				return false;
+
 			}
 			break;
 		case VK_NUMPAD4:
 			if (cursor > 0)
 			{
 				--cursor;
+				return false;
+
 			}
 		case VK_RIGHT:
 			if (cursor < stringSize)
 			{
 				++cursor;
+				return false;
+
 			}
 			break;
 		case VK_NUMPAD6:
 			if (cursor < stringSize)
 			{
 				++cursor;
+				return false;
+
 			}
+			break;
+		default:
 			break;
 		}
 	}
-
-
-
-
-
-   /* if (!event.bKeyDown) return;
-
-    if (event.wVirtualKeyCode >= 0x30 && event.wVirtualKeyCode <= 0x5a)
-    {
-        if (value.length() < width){
-            value.insert(curserPosition, 1, event.uChar.AsciiChar);
-            curserPosition++;
-            draw();
-        }
-       
-    }
-
-    int textWidth = value.length();
-    CONSOLE_SCREEN_BUFFER_INFO info;
-    auto handle = GetStdHandle(STD_OUTPUT_HANDLE);
-    GetConsoleScreenBufferInfo(handle, &info);
-    auto offset = info.dwCursorPosition.X - this->left - 1;
-
-    if (event.wVirtualKeyCode == VK_LEFT || event.wVirtualKeyCode == VK_RIGHT){
-        if (offset > 0 && event.wVirtualKeyCode == VK_LEFT){
-            SetConsoleCursorPosition(handle,{ info.dwCursorPosition.X - 1, info.dwCursorPosition.Y });
-            curserPosition--;
-        }
-        if (offset < textWidth && event.wVirtualKeyCode == VK_RIGHT){
-            SetConsoleCursorPosition(handle,{ info.dwCursorPosition.X + 1, info.dwCursorPosition.Y });
-            curserPosition++;
-        }
-    }
-
-    if (event.wVirtualKeyCode == VK_BACK)
-    {
-        if (value.length() > 0){
-            value.erase(curserPosition - 1, 1);
-            SetConsoleCursorPosition(handle,{ info.dwCursorPosition.X - curserPosition, info.dwCursorPosition.Y });
-            curserPosition--;
-            draw( this.g , top, top, top);
-        }
-    }*/
+	return true;
 }
 
 void TextBox::draw(Graphics& g, int x, int y, size_t z)
@@ -149,7 +118,38 @@ void TextBox::draw(Graphics& g, int x, int y, size_t z)
     for (int i = 0; i < width; i++)
         std::cout << (char) 0xc4;
     std::cout << (char) 0xd9;
+	int ff = static_cast<SHORT>(left + 1 + value.length());
+	int uu = left + 1 + value.length();
+	cursor;
+    SetConsoleCursorPosition(handle, { static_cast<SHORT>(left + 1 + cursor), top+1 });
+	//g.moveTo(currentCoord.X + 2, currentCoord.Y + 2);
+	if (this == focused && focus == true)
+	g.setCursorVisibility(true);
+	else
+	g.setCursorVisibility(false);
 
-    SetConsoleCursorPosition(handle, { static_cast<SHORT>(left + 1 + value.length()), top+1 });
 }
 
+void TextBox::mousePressed(int x, int y, bool isLeft)
+{
+	auto handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (x >= left && x <= left + width && y >= top && y <= top + 2 && isLeft == true)
+	{
+		if (this != focused || focus == false)
+		{
+			focus = true;
+			focused = this;
+		}
+		if (value.size() >= x - left)
+		{
+			cursor = x - left;
+		}
+		else
+			cursor = value.size();
+
+
+	}
+	else
+		if (focus == true)
+			focus = false;
+}

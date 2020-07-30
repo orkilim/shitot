@@ -28,6 +28,10 @@ MassageBox::MassageBox(string message) :
 void MassageBox:: draw(Graphics& g, int x, int y, size_t z){
     if (visible && !z){
         Control::lock_events();
+
+        if (this == focused && focus == false)
+            this->ok.flipBgToWhite();
+
         Panel::draw(g, x-1, y-1, z);
     }
     else if (!visible)
@@ -73,4 +77,36 @@ void MassageBox::cancelPressed(){
 void MassageBox::onFocus(bool flag)
 {
     focus = flag;
+}
+
+bool MassageBox::keyDown(int keyCode, char character)
+{
+    if (!focus)
+    {
+        if (keyCode == VK_TAB)
+        {
+            this->ok.flipBgToBlack();
+            this->cancel.flipBgToWhite();
+            focus = true;
+            return false;
+        }
+        if (keyCode == VK_SPACE || keyCode == VK_RETURN)
+        {
+            okPressed();
+        }
+    }
+    else
+    {
+        if (keyCode == VK_TAB)
+        {
+            this->cancel.flipBgToBlack();
+            focus = false;
+            return true;
+        }
+        if (keyCode == VK_SPACE || keyCode == VK_RETURN)
+        {
+            cancelPressed();
+        }
+    }
+    return true;
 }
