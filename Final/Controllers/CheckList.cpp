@@ -12,7 +12,7 @@ left(left),top(top),options_lbl(options_lbl),focus(false)
     for(int i=0; i < options.size(); i++ )
     {
         options[i].setTop(i);
-        options[i].addListener(this);
+        //options[i].addListener(this);
         this->addToPanel(&options[i]);
         pos.x = getLeft();
         pos.y = getTop()+i+1;
@@ -75,19 +75,6 @@ void CheckList::mousePressed(int x, int y, bool isLeft)
 
 }
 
-void CheckList::activateListener(int x, int y)
-{
-    ofstream myfile;
-    myfile.open ("activateListener.txt", std::ios_base::app);
-    for(int i=0; i < options_pos.size(); i++){
-        if(x >= options_pos[i].x && x <= options_pos[i].x + 10 && y >= options_pos[i].y)
-        {
-            SelectItemCursor(i);
-        }
-    }
-    myfile.close();
-}
-
 bool CheckList::SelectItemCursor(int index) {
     Color tempColor = options[index].getBackgroundColor();
     options[index].SetBackgroundColor(options[index].getTextColor());
@@ -105,7 +92,6 @@ bool CheckList::ClearItemCursor() {
     cursor = -1;
     return true;
 }
-
 
 bool CheckList::keyDown(int keyCode, char character)
 {
@@ -157,6 +143,7 @@ bool CheckList::AddSelectedItem(int index)
     }
     return false;
 }
+
 bool CheckList::RemoveSelectedItem(int index)
 {
     if (index >= 0 && index <= options_pos.size())

@@ -1,0 +1,279 @@
+#include "ComboBox.h"
+#include <fstream>
+
+
+ComboBox::ComboBox(int left, int top, vector<string> options_lbl) : Panel(left, top, 25, 13, new Single, Color::Red, Color::White),
+left(left), top(top), options_lbl(options_lbl), focus(false), valueToDisplay("ComboBox"),
+closeHeight(5), isOpen(false), selectedItem(0) {
+	position_c pos = { 0,0 };
+	for (std::vector<string>::iterator lbl = options_lbl.begin(); lbl != options_lbl.end(); ++lbl)
+	{
+		options.push_back(Button(*lbl));
+	}
+	for (int i = 0; i < options.size(); i++)
+	{
+		options[i].setTop(i);
+		options[i].addListener(this);
+		this->addToPanel(&options[i]);
+		pos.x = getLeft();
+		pos.y = getTop() + i + 1;
+		options_pos.push_back(pos);
+	}
+}
+
+
+//void ComboBox::setSelectedIndex(size_t index) {
+//	choosenIndex = index;
+//	string item = static_cast<Button*>(controls[index + 2])->getValue();
+//	item = item.substr(4, getWidth());
+//	static_cast<Label*>(controls[0])->setValue(item);
+//	closeList();
+//}
+
+
+void ComboBox::draw(Graphics & g, int x, int y, size_t z) {
+	int vectorSize = static_cast<int>(options.size());
+	g.moveTo(x, y);
+	g.setBackground(backgroundColor);
+	g.setForeground(textColor);
+
+	if (!isOpen)
+	{
+		cout << '\xDA';
+		for (int i = 0; i < 22; i++)
+		{
+			cout << '\xC4';
+		}
+		cout << '\xBF';
+		g.moveTo(x, y + 1);
+		cout << '\xB3';
+		for (int i = 0; i < 20; i++)
+		{
+			cout << ' ';
+		}
+		cout << '\xB3' << '\xF0' << '\xB3';
+		g.write(x + 2, y + 1, valueToDisplay);
+		g.moveTo(x, y + 2);
+		cout << '\xC0';
+		for (int i = 0; i < 22; i++)
+		{
+			cout << '\xC4';
+		}
+		cout << '\xD9';
+	}
+	else
+	{
+		cout << '\xDA';
+		for (int i = 0; i < 22; i++)
+		{
+			cout << '\xC4';
+		}
+		cout << '\xBF';
+		g.moveTo(x, y + 1);
+		cout << '\xB3';
+		for (int i = 0; i < 20; i++)
+		{
+			cout << ' ';
+		}
+		cout << '\xB3' << '\xF0' << '\xB3';
+		g.write(x + 2, y + 1, options_lbl[0]);
+		g.moveTo(x, y + 2);
+		cout << '\xB3';
+		for (int i = 0; i < 22; i++)
+		{
+			cout << '\xC4';
+		}
+		cout << '\xB3';
+
+
+		int tempX = x;
+		int tempY = y + 3;
+
+		for (int y = 0; y < vectorSize; y++)
+		{
+			g.setBackground(backgroundColor);
+			g.setForeground(textColor);
+			if (y == selectedItem)
+			{
+				g.setBackground(Color::White);
+				g.setForeground(Color::Black);
+			}
+			if (y == vectorSize - 1)
+			{
+				g.moveTo(tempX, tempY);
+				cout << '\xB3';
+				for (int x = 0; x < 22; x++)
+				{
+					cout << ' ';
+				}
+				cout << '\xB3';
+				g.write(tempX + 2, tempY, options_lbl[y]);
+				g.moveTo(tempX, ++tempY);
+				cout << '\xC0';
+				for (int x = 0; x < 22; x++)
+				{
+					cout << '\xC4';
+				}
+				cout << '\xD9';
+			}
+			else
+			{
+				g.moveTo(tempX, tempY);
+				cout << '\xB3';
+				for (int x = 0; x < 22; x++)
+				{
+					cout << ' ';
+				}
+				cout << '\xB3';
+				g.write(tempX + 2, tempY, options_lbl[y]);
+				g.moveTo(tempX, ++tempY);
+				cout << '\xB3';
+				for (int x = 0; x < 22; x++)
+				{
+					cout << '\xC4';
+				}
+				cout << '\xB3';
+				tempY++;
+			}
+
+		}
+	}
+}
+
+void ComboBox::onDownKey() {
+	//if (!isOpen) return;
+	//int item = itemInFocus();
+
+	//if (!(item+1)) item = 2;
+	//else {
+	//	controls[item]->unfocus();
+	//	if (item >= controls.size() - 1) item = 2;
+	//	else item += 1;
+	//}
+
+	//controls[item]->focus();
+}
+
+void ComboBox::onUpKey() {
+	//if (!isOpen) return;
+	//int item = itemInFocus();
+
+	//if (!(item + 1)) item = 2;
+	//else {
+	//	controls[item]->unfocus();
+	//	if (item == 2) item = controls.size() - 1;
+	//	else item -= 1;
+	//}
+	//
+	//controls[item]->focus();
+}
+
+void ComboBox::onEnterKey(){
+	/*if (itemInFocus() == -1 || !isOpen) return;
+	setSelectedIndex(itemInFocus() - 2);*/
+}
+void ComboBox::unfocus(){
+	/*ListPanel::unfocus();
+	closeList();*/
+}
+
+void ComboBox::toggle() {
+	if (isOpen) closeList();
+	else openList();
+}
+
+void ComboBox::closeList() {
+	isOpen = false;
+	setHeight(closeHeight);
+}
+
+void ComboBox::openList() {
+	isOpen = true;
+	setHeight(openHeight);
+}
+
+void ComboBox::mousePressed(short x, short y, bool isLeft) {
+
+
+	if (!isOpen)
+	{
+		if (y == top + 1 && (x > left && x < (left + width) && !options[0].CkClicked()))//39-62, 3-7
+		{
+			isOpen = !isOpen;
+		}
+
+	}
+	else
+	{
+		if (y >= top && y <= top + 3 && (x > left && x < (left + width)))
+		{
+			if (!options[0].CkClicked())
+				isOpen = !isOpen;
+		}
+		else
+		{
+			
+
+			y = ceil(float(y) / 2);
+			int tempY = y - 4;
+			if (y== options_pos[tempY].y)
+			{
+			selectedItem = tempY;
+			valueToDisplay = options_lbl[tempY];
+			isOpen = !isOpen;
+ }
+		}
+
+	}
+}
+
+
+
+void ComboBox::activateListener(int x, int y)
+{
+	ofstream myfile;
+	myfile.open("activateListener.txt", std::ios_base::app);
+
+	if (x >= options_pos[0].x && x <= options_pos[0].x + 24 && y >= options_pos[0].y - 1 && y <= top + options_pos.size() * 3)
+	{
+
+		if (!isOpen)//close
+		{
+
+			if (y <= options_pos[0].y + 2 || y >= options_pos[0].y + 2)
+				mousePressed(x, options_pos[0].y, left);
+
+		}
+		else //open
+		mousePressed(x, y, left);
+
+	}
+	if (options[options_pos.size() - 2].CkClicked())
+	{
+		for (int i = 0; i < options_pos.size(); i++)
+			options[i].UnClicked();
+	}
+	myfile.close();
+}
+
+ComboBox::~ComboBox()
+{
+	/*Panel::~Panel();
+	free(choosenItem);
+	free(toogleBtn);*/
+}
+
+bool ComboBox::SelectItemCursor(int index) {
+	return false;
+
+}
+
+bool ComboBox::ClearItemCursor(){
+
+	return true;
+}
+
+bool ComboBox::keyDown(int keyCode, char character)
+{
+	return false;
+}

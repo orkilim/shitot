@@ -111,6 +111,7 @@ bool RadioBox::SelectItemCursor(int index) {
     cursor=index;
     return true;
 }
+
 bool RadioBox::ClearItemCursor() {
     Color tempColor = options[cursor].getBackgroundColor();
     options[cursor].SetBackgroundColor(options[cursor].getTextColor());
@@ -119,6 +120,7 @@ bool RadioBox::ClearItemCursor() {
     cursor = -1;
     return true;
 }
+
 void RadioBox::activateListener(int x, int y)
 {
     ofstream myfile;
@@ -133,6 +135,7 @@ void RadioBox::activateListener(int x, int y)
     }
     myfile.close();
 }
+
 bool RadioBox::SelectedItem(int index)
 {
     if (index >= 0 && index <= options_pos.size())
@@ -142,6 +145,7 @@ bool RadioBox::SelectedItem(int index)
 }
     return false;
 }
+
 bool RadioBox::ClearSelection(){
     selectedItem = -1;
     return true;

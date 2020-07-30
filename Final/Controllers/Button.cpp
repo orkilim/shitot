@@ -12,6 +12,7 @@ void Button::mousePressed(int x, int y, bool isLeft) {
     if (isInside(x, y, x, y, getWidth(), getHeight())) {
         for(int i = 0; i< Listeners.size(); i++){
             Listeners[i]->activateListener(x, y);
+            clicked = TRUE;
         }
     }
 }

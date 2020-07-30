@@ -122,7 +122,6 @@ void TextBox::draw(Graphics& g, int x, int y, size_t z)
 	int uu = left + 1 + value.length();
 	cursor;
     SetConsoleCursorPosition(handle, { static_cast<SHORT>(left + 1 + cursor), top+1 });
-	//g.moveTo(currentCoord.X + 2, currentCoord.Y + 2);
 	if (this == focused && focus == true)
 	g.setCursorVisibility(true);
 	else

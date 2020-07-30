@@ -11,7 +11,7 @@
 #include "../Controllers/CheckList.h"
 #include "../Controllers/TextBox.h"
 #include "../Controllers/RadioBox.h"
-
+#include "../Controllers/ComboBox.h"
 using namespace std;
 
 int main(int argc, char **argv)
@@ -39,10 +39,15 @@ Label Title("Welcome to our SE Methods project");
 	ckList.RemoveSelectedItem(1);
 	ckList.AddSelectedItem(1);
 
-	Label lcombobox("Combobox:");
-	lcombobox.setLeft(45);
-	lcombobox.setTop(2);
-
+	Label lcomboBox("Combobox:");
+	lcomboBox.setLeft(45);
+	lcomboBox.setTop(2);
+	vector<string> combo_list_options;
+	combo_list_options.push_back(" 1)     Option     ");
+	combo_list_options.push_back(" 2)     Option     ");
+	combo_list_options.push_back(" 3)     Option     ");
+	combo_list_options.push_back(" 4)     Option     ");
+	ComboBox comboBox(38, 3, combo_list_options);
 
 	Label lradioList("RadioBox:");
 	lradioList.setLeft(79);
@@ -79,7 +84,8 @@ Label Title("Welcome to our SE Methods project");
 	MainPanel.addToPanel(&Title);
 	MainPanel.addToPanel(&lcheckList);
 	MainPanel.addToPanel(&ckList);
-	MainPanel.addToPanel(&lcombobox);
+	MainPanel.addToPanel(&lcomboBox);
+	MainPanel.addToPanel(&comboBox);
 	MainPanel.addToPanel(&lradioList);
 	MainPanel.addToPanel(&rdList);
 	 SecPanel.addToPanel(&lpanel);
