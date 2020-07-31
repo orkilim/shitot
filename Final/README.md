@@ -23,7 +23,7 @@ Or Kilim
 <img src="Images/Project.png" width="500px"/>
 
 **Panel** <br>
-<img src="Images/panel.png" width="344px"/>
+<img src="Images/Panel.png" width="344px"/>
 
 **Label** <br>
 <img src="Images/Label.png" width="344px"/>
