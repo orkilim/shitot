@@ -20,7 +20,7 @@ Or Kilim
 # Controls Specification
 
 **SE Methods Final Project** <br>
-<img src="/Images/Project.png" width="500px"/>
+<img src="Images/Project.png" width="500px"/>
 
 **Panel** <br>
 <img src="/Images/panel.png" width="344px"/>
@@ -31,8 +31,6 @@ Or Kilim
 **TextBox** <br>
 <img src="/Images/TextBox.png" width="344px"/>
 
-**Button** <br>
-<img src=/Images/Button.png" width="144px"/>
 
 **MessageBox** <br>
 <img src="/Images/MSG.png" width="344px"/>
